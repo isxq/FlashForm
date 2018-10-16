@@ -9,9 +9,9 @@
 /* Begin PBXBuildFile section */
 		81A3FF6D21756A4B0011EC87 /* FlashFormItemGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81A3FF6C21756A4B0011EC87 /* FlashFormItemGroup.swift */; };
 		81A3FF6F217599210011EC87 /* FlashFormTextItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81A3FF6E217599210011EC87 /* FlashFormTextItem.swift */; };
+		81A3FF772175C9220011EC87 /* FlashForm.h in Headers */ = {isa = PBXBuildFile; fileRef = 81A3FF752175C9220011EC87 /* FlashForm.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		81C980402174848F008D15C6 /* FlashForm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81C980362174848F008D15C6 /* FlashForm.framework */; };
 		81C980452174848F008D15C6 /* FlashFormTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81C980442174848F008D15C6 /* FlashFormTests.swift */; };
-		81C980472174848F008D15C6 /* FlashForm.h in Headers */ = {isa = PBXBuildFile; fileRef = 81C980392174848F008D15C6 /* FlashForm.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		81C98054217484B7008D15C6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81C98053217484B7008D15C6 /* UIKit.framework */; };
 		81C98056217484C2008D15C6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81C98055217484C2008D15C6 /* Foundation.framework */; };
 		81C9805821748515008D15C6 /* FlashForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81C9805721748515008D15C6 /* FlashForm.swift */; };
@@ -31,9 +31,9 @@
 /* Begin PBXFileReference section */
 		81A3FF6C21756A4B0011EC87 /* FlashFormItemGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashFormItemGroup.swift; sourceTree = "<group>"; };
 		81A3FF6E217599210011EC87 /* FlashFormTextItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashFormTextItem.swift; sourceTree = "<group>"; };
+		81A3FF752175C9220011EC87 /* FlashForm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlashForm.h; path = Resources/FlashForm.h; sourceTree = SOURCE_ROOT; };
+		81A3FF762175C9220011EC87 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = SOURCE_ROOT; };
 		81C980362174848F008D15C6 /* FlashForm.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FlashForm.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		81C980392174848F008D15C6 /* FlashForm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FlashForm.h; sourceTree = "<group>"; };
-		81C9803A2174848F008D15C6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		81C9803F2174848F008D15C6 /* FlashFormTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlashFormTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		81C980442174848F008D15C6 /* FlashFormTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashFormTests.swift; sourceTree = "<group>"; };
 		81C980462174848F008D15C6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -64,6 +64,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		81A3FF742175C8DB0011EC87 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				81A3FF752175C9220011EC87 /* FlashForm.h */,
+				81A3FF762175C9220011EC87 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		81C9802C2174848F008D15C6 = {
 			isa = PBXGroup;
 			children = (
@@ -86,12 +95,11 @@
 		81C980382174848F008D15C6 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				81C980392174848F008D15C6 /* FlashForm.h */,
+				81A3FF742175C8DB0011EC87 /* Supporting Files */,
 				81C9805721748515008D15C6 /* FlashForm.swift */,
 				81C9809921749C07008D15C6 /* FlashFormItem.swift */,
 				81A3FF6C21756A4B0011EC87 /* FlashFormItemGroup.swift */,
 				81A3FF6E217599210011EC87 /* FlashFormTextItem.swift */,
-				81C9803A2174848F008D15C6 /* Info.plist */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -121,7 +129,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				81C980472174848F008D15C6 /* FlashForm.h in Headers */,
+				81A3FF772175C9220011EC87 /* FlashForm.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -382,7 +390,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = FlashForm/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -409,7 +417,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = FlashForm/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

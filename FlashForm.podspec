@@ -10,7 +10,8 @@ Pod::Spec.new do |s|
 
   s.source_files = "Source/*.swift"
   s.platform = :ios, "9.0"
-
+  s.frameworks = 'UIKit', 'Foundation'
+  
   s.author             = { "申小强" => "shen_x_q@163.com" }
   s.social_media_url   = "http://isxq.github.io"
 
