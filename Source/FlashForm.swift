@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 public class FlashForm<Element>: UIControl  {
     
@@ -14,19 +15,19 @@ public class FlashForm<Element>: UIControl  {
     
     //UIComponents
     
-    private var scrollView: UIScrollView!
+    fileprivate var scrollView: UIScrollView!
     var contentView: UIView!
     
-    private var _rowHeight: CGFloat = 44
-    private var _headerHeight: CGFloat = 15
+    fileprivate var _rowHeight: CGFloat = 44
+    fileprivate var _headerHeight: CGFloat = 15
     
     // Values
-    private var itemMap: [String: FlashFormItem] = [:]
+    fileprivate var itemMap: [String: FlashFormItem] = [:]
     var content: [Element]!
     
     //MARK: - Initializations
     
-    private override init(frame: CGRect) {
+    fileprivate override init(frame: CGRect) {
         super.init(frame: frame)
     }
     
