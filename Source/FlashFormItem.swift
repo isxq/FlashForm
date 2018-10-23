@@ -56,7 +56,7 @@ open class FlashFormItem: UIControl {
         setupSubviews()
     }
     
-    override init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         translatesAutoresizingMaskIntoConstraints = false
     }
