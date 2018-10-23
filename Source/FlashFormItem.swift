@@ -49,14 +49,14 @@ open class FlashFormItem: UIControl {
     
     //MARK: - Initializations
     
-    public init(key: String) {
-        self.init()
+    public convenience init(key: String) {
+        self.init(frame: .zero)
         self.key = key
         backgroundColor = .white
         setupSubviews()
     }
     
-    override init(frame: CGRect = .zero) {
+    override init(frame: CGRect) {
         super.init(frame: frame)
         translatesAutoresizingMaskIntoConstraints = false
     }
