@@ -103,7 +103,7 @@ open class FlashFormItem: UIControl, FlashShadowProtocol {
         
     }
     
-    public var valueDic: [String : FlashFormValue] {
+    open var valueDic: [String : FlashFormValue] {
         return [key: ""]
     }
 }

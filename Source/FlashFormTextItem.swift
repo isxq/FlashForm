@@ -21,7 +21,7 @@ open class FlashFormTextItem: FlashFormItem {
     var titleLabel: UILabel!
     var contentLabel: UITextField!
     
-    public override var valueDic: [String : FlashFormValue]{
+    open override var valueDic: [String : FlashFormValue]{
         return [key: value ?? ""]
     }
     
