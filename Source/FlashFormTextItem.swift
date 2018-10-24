@@ -16,8 +16,19 @@ open class FlashFormTextItem: FlashFormItem {
         }
     }
     
+    var value: String?
+    
     var titleLabel: UILabel!
-    var contentLabel: UILabel!
+    var contentLabel: UITextField!
+    
+    public override var valueDic: [String : FlashFormValue]{
+        return [key: value ?? ""]
+    }
+    
+    public override func setValue(with dic: [String : FlashFormValue]) {
+        value = dic[key] as? String
+        contentLabel.text = value
+    }
     
     public convenience init(key: String, title: String?, content: String) {
         self.init(key: key)
@@ -32,8 +43,8 @@ open class FlashFormTextItem: FlashFormItem {
         titleLabel?.translatesAutoresizingMaskIntoConstraints = false
         addSubview(titleLabel)
         
-        contentLabel = UILabel()
-        contentLabel?.text = value as? String
+        contentLabel = UITextField()
+        contentLabel?.text = value
         contentLabel?.translatesAutoresizingMaskIntoConstraints = false
         addSubview(contentLabel)
         
@@ -47,26 +58,6 @@ open class FlashFormTextItem: FlashFormItem {
             contentLabel.widthAnchor.constraint(lessThanOrEqualTo: widthAnchor, multiplier: 0.7)
         ])
     }
-}
-
-extension FlashFormTextItem: FlashFormItemProtocol {
-    
-    public typealias ValueType = String
-    
-    public var value: FlashFormValue? {
-        get {
-            return _value as? String
-        }
-        set {
-            _value = newValue
-            contentLabel?.text = newValue as? String
-        }
-    }
-    
-    public var valueDic: [String : FlashFormValue] {
-        return [key: value ?? ""]
-    }
-    
 }
 
 extension String: FlashFormValue {}

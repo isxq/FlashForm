@@ -13,15 +13,11 @@ public protocol FlashFormValue{}
 
 
 public protocol  FlashShadowProtocol {
-    var value: FlashFormValue? { get set }
     var valueDic: [String: FlashFormValue] { get }
+    func setValue(with dic: [String: FlashFormValue])
 }
 
-public protocol FlashFormItemProtocol: FlashShadowProtocol {
-    associatedtype ValueType: FlashFormValue
-}
-
-open class FlashFormItem: UIControl {
+open class FlashFormItem: UIControl, FlashShadowProtocol {
     
     private var separator: UIView!
     private var topline: UIView?
@@ -34,6 +30,13 @@ open class FlashFormItem: UIControl {
             }
         }
     }
+    
+    public var separatorColor: UIColor? {
+        didSet {
+            separator.backgroundColor = separatorColor
+        }
+    }
+    
     public var isToplineShow: Bool = false {
         didSet {
             if let topLine = topline {
@@ -95,4 +98,13 @@ open class FlashFormItem: UIControl {
         ])
         return topline
     }
+    
+    public func setValue(with dic: [String : FlashFormValue]) {
+        
+    }
+    
+    public var valueDic: [String : FlashFormValue] {
+        return [key: ""]
+    }
 }
+

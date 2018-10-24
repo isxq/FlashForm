@@ -46,6 +46,7 @@ open class FlashFormItemGroup {
     }
     
     
+    
     public init(_ items:[FlashFormItem], _ key: String? = nil) {
         self.items = items
     }
@@ -53,9 +54,7 @@ open class FlashFormItemGroup {
     public func dic() -> [String: FlashFormValue] {
         var dic: [String: FlashFormValue] = [:]
         items.forEach { (item) in
-            if let item = item as? FlashShadowProtocol{
-                item.valueDic.forEach{dic.updateValue($1, forKey: $0)}
-            }
+            item.valueDic.forEach{dic.updateValue($1, forKey: $0)}
         }
         return dic
     }

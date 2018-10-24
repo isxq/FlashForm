@@ -20,6 +20,7 @@ public class FlashForm<Element>: UIControl  {
     
     fileprivate var _rowHeight: CGFloat = 44
     fileprivate var _headerHeight: CGFloat = 15
+    fileprivate var _separatorColor: UIColor?
     
     // Values
     fileprivate var itemMap: [String: FlashFormItem] = [:]
@@ -96,6 +97,18 @@ public extension FlashForm where Element == FlashFormItem {
         }
     }
     
+    var separatorColor: UIColor? {
+        get {
+            return _separatorColor
+        }
+        set {
+            _separatorColor = newValue
+            content.forEach { (item) in
+                item.separatorColor = newValue
+            }
+        }
+    }
+    
     public convenience init(content: [Element], frame: CGRect = .zero) {
         self.init(frame: frame)
         translatesAutoresizingMaskIntoConstraints = false
@@ -153,9 +166,7 @@ public extension FlashForm where Element == FlashFormItem {
     public func valueDic() -> [String: FlashFormValue] {
         var dic: [String: FlashFormValue] = [:]
         itemMap.values.forEach { (item) in
-            if let item = item as? FlashShadowProtocol{
-                item.valueDic.forEach{dic.updateValue($1, forKey: $0)}
-            }
+           item.valueDic.forEach{dic.updateValue($1, forKey: $0)}
         }
         return dic
     }
@@ -170,6 +181,20 @@ public extension FlashForm where Element == FlashFormItemGroup {
         set {
             _rowHeight = newValue
             layoutContents()
+        }
+    }
+    
+    var separatorColor: UIColor? {
+        get {
+            return _separatorColor
+        }
+        set {
+            _separatorColor = newValue
+            content.forEach { (item) in
+                item.items.forEach({ (item) in
+                    item.separatorColor = newValue
+                })
+            }
         }
     }
     
