@@ -16,6 +16,7 @@
 		81C98056217484C2008D15C6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81C98055217484C2008D15C6 /* Foundation.framework */; };
 		81C9805821748515008D15C6 /* FlashForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81C9805721748515008D15C6 /* FlashForm.swift */; };
 		81C9809A21749C07008D15C6 /* FlashFormItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81C9809921749C07008D15C6 /* FlashFormItem.swift */; };
+		81CDDDB121814B040009364A /* FlashFormError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81CDDDB021814B040009364A /* FlashFormError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,6 +42,7 @@
 		81C98055217484C2008D15C6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		81C9805721748515008D15C6 /* FlashForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashForm.swift; sourceTree = "<group>"; };
 		81C9809921749C07008D15C6 /* FlashFormItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashFormItem.swift; sourceTree = "<group>"; };
+		81CDDDB021814B040009364A /* FlashFormError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashFormError.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +102,7 @@
 				81C9809921749C07008D15C6 /* FlashFormItem.swift */,
 				81A3FF6C21756A4B0011EC87 /* FlashFormItemGroup.swift */,
 				81A3FF6E217599210011EC87 /* FlashFormTextItem.swift */,
+				81CDDDB021814B040009364A /* FlashFormError.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -234,6 +237,7 @@
 				81A3FF6F217599210011EC87 /* FlashFormTextItem.swift in Sources */,
 				81C9809A21749C07008D15C6 /* FlashFormItem.swift in Sources */,
 				81A3FF6D21756A4B0011EC87 /* FlashFormItemGroup.swift in Sources */,
+				81CDDDB121814B040009364A /* FlashFormError.swift in Sources */,
 				81C9805821748515008D15C6 /* FlashForm.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -20,11 +20,28 @@ public class FlashForm<Element>: UIControl  {
     
     fileprivate var _rowHeight: CGFloat = 44
     fileprivate var _headerHeight: CGFloat = 15
-    fileprivate var _separatorColor: UIColor?
     
     // Values
     fileprivate var itemMap: [String: FlashFormItem] = [:]
     var content: [Element]!
+    
+    var separatorColor: UIColor? {
+        didSet {
+            itemMap.values.forEach{ $0.separatorColor = separatorColor}
+        }
+    }
+    
+    var separatorLeading: CGFloat? {
+        didSet {
+            itemMap.values.forEach{$0.separatorLeading = separatorLeading}
+        }
+    }
+    
+    var isToplineShow: Bool? {
+        didSet {
+            itemMap.values.forEach{$0.isToplineShow = isToplineShow}
+        }
+    }
     
     //MARK: - Initializations
     
@@ -97,18 +114,6 @@ public extension FlashForm where Element == FlashFormItem {
         }
     }
     
-    var separatorColor: UIColor? {
-        get {
-            return _separatorColor
-        }
-        set {
-            _separatorColor = newValue
-            content.forEach { (item) in
-                item.separatorColor = newValue
-            }
-        }
-    }
-    
     public convenience init(content: [Element], frame: CGRect = .zero) {
         self.init(frame: frame)
         translatesAutoresizingMaskIntoConstraints = false
@@ -163,10 +168,11 @@ public extension FlashForm where Element == FlashFormItem {
         }
     }
     
-    public func valueDic() -> [String: FlashFormValue] {
+    public func valueDic() throws -> [String: FlashFormValue] {
         var dic: [String: FlashFormValue] = [:]
-        itemMap.values.forEach { (item) in
-           item.valueDic.forEach{dic.updateValue($1, forKey: $0)}
+        
+        try itemMap.values.forEach { (item) in
+            try item.getValue().forEach{dic.updateValue($1, forKey: $0)}
         }
         return dic
     }
@@ -184,20 +190,6 @@ public extension FlashForm where Element == FlashFormItemGroup {
         }
     }
     
-    var separatorColor: UIColor? {
-        get {
-            return _separatorColor
-        }
-        set {
-            _separatorColor = newValue
-            content.forEach { (item) in
-                item.items.forEach({ (item) in
-                    item.separatorColor = newValue
-                })
-            }
-        }
-    }
-    
     var headerHeight: CGFloat {
         get {
             return _headerHeight
@@ -207,6 +199,8 @@ public extension FlashForm where Element == FlashFormItemGroup {
             layoutContents()
         }
     }
+    
+    
     
     public convenience init(content: [FlashFormItemGroup], frame: CGRect = .zero) {
         self.init(frame: frame)
@@ -311,9 +305,9 @@ public extension FlashForm where Element == FlashFormItemGroup {
         }
     }
     
-    public func valueDic() -> [String: FlashFormValue] {
+    public func valueDic() throws -> [String: FlashFormValue] {
         var dic: [String: FlashFormValue] = [:]
-        content.forEach{$0.dic().forEach{dic.updateValue($1, forKey: $0)}}
+        try content.forEach{ try $0.dic().forEach{dic.updateValue($1, forKey: $0) }}
         return dic
     }
 }

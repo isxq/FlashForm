@@ -16,18 +16,17 @@ open class FlashFormTextItem: FlashFormItem {
         }
     }
     
-    var value: String?
-    
     var titleLabel: UILabel!
     var contentLabel: UITextField!
     
-    open override var valueDic: [String : FlashFormValue]{
-        return [key: value ?? ""]
+    var value: String? {
+        didSet {
+            _value = value
+        }
     }
     
-    public override func setValue(with dic: [String : FlashFormValue]) {
-        value = dic[key] as? String
-        contentLabel.text = value
+    open override func setValue(with value: FlashFormValue) {
+        contentLabel.text = value as? String
     }
     
     public convenience init(key: String, title: String?, content: String) {

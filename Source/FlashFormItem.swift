@@ -11,16 +11,17 @@ import Foundation
 
 public protocol FlashFormValue{}
 
-
 public protocol  FlashShadowProtocol {
-    var valueDic: [String: FlashFormValue] { get }
-    func setValue(with dic: [String: FlashFormValue])
+    func getValue() throws -> [String: FlashFormValue]
+    func setValue(with value: FlashFormValue)
 }
 
 open class FlashFormItem: UIControl, FlashShadowProtocol {
     
     private var separator: UIView!
+    
     private var topline: UIView?
+    
     private var separatorConstraint: NSLayoutConstraint!
     
     public var separatorLeading: CGFloat? {
@@ -37,22 +38,24 @@ open class FlashFormItem: UIControl, FlashShadowProtocol {
         }
     }
     
-    public var isToplineShow: Bool = false {
+    public var isToplineShow: Bool? = false {
         didSet {
-            if let topLine = topline {
-                topLine.isHidden = isToplineShow
-            } else if isToplineShow == true {
-                topline = createTopLine()
+            if let isToplineShow = isToplineShow {
+                if let topLine = topline {
+                    topLine.isHidden = isToplineShow
+                } else if isToplineShow == true {
+                    topline = createTopLine()
+                }
             }
         }
     }
     
     public var key: String!
-    var _value: Any?
     
+    open var _value: FlashFormValue?
     //MARK: - Initializations
     
-    public convenience init(key: String) {
+    public convenience init(key: String = "") {
         self.init(frame: .zero)
         self.key = key
         backgroundColor = .white
@@ -73,7 +76,7 @@ open class FlashFormItem: UIControl, FlashShadowProtocol {
     final func setupSubviews() {
         separator = UIView()
         separator.translatesAutoresizingMaskIntoConstraints = false
-        separator.backgroundColor = .gray
+        separator.backgroundColor = .lightGray
         addSubview(separator)
         separatorConstraint = separator.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10)
         NSLayoutConstraint.activate([
@@ -99,12 +102,16 @@ open class FlashFormItem: UIControl, FlashShadowProtocol {
         return topline
     }
     
-    public func setValue(with dic: [String : FlashFormValue]) {
+    open func setValue(with value: FlashFormValue) {
         
     }
     
-    open var valueDic: [String : FlashFormValue] {
-        return [key: ""]
+    open func getValue() throws -> [String : FlashFormValue] {
+        if let value = _value {
+            return [key: value]
+        } else {
+            return [:]
+        }
     }
 }
 

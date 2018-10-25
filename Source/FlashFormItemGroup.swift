@@ -18,7 +18,9 @@ open class FlashFormItemGroup {
     var footerLabel: UILabel?
     
     var items: [FlashFormItem]!
+    
     public var headerHeight: CGFloat?
+    
     public var key: String?
     
     public var title: String? {
@@ -45,16 +47,14 @@ open class FlashFormItemGroup {
         }
     }
     
-    
-    
     public init(_ items:[FlashFormItem], _ key: String? = nil) {
         self.items = items
     }
     
-    public func dic() -> [String: FlashFormValue] {
+    public func dic() throws -> [String: FlashFormValue] {
         var dic: [String: FlashFormValue] = [:]
-        items.forEach { (item) in
-            item.valueDic.forEach{dic.updateValue($1, forKey: $0)}
+        try items.forEach { (item) in
+            try item.getValue().forEach{dic.updateValue($1, forKey: $0)}
         }
         return dic
     }
@@ -110,6 +110,5 @@ extension FlashFormItemGroup: Hashable {
     public static func == (lhs: FlashFormItemGroup, rhs: FlashFormItemGroup) -> Bool {
         return lhs.hashValue == rhs.hashValue
     }
-    
     
 }

@@ -18,6 +18,7 @@ class ViewController: UIViewController {
         let flashGroup0 = FlashFormItemGroup([
             FlashFormTextItem(key: "key", title: "批次号", content: "PC18090001"),
             FlashFormTextItem(key: "key", title: "装车总运费", content: "2089元"),
+            FlashFormItem(key: "2")
             ])
         
         let flashGroup1 = FlashFormItemGroup([
@@ -29,8 +30,6 @@ class ViewController: UIViewController {
             flashGroup0,
             flashGroup1
             ])
-        
-        print(flashGroup0.dic())
         
         form.backgroundColor = UIColor.lightGray
         
