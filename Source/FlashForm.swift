@@ -22,22 +22,22 @@ public class FlashForm<Element>: UIControl  {
     fileprivate var _headerHeight: CGFloat = 15
     
     // Values
-    fileprivate var itemMap: [String: FlashFormItem] = [:]
+    fileprivate var itemMap: [[String]: FlashFormItem] = [:]
     var content: [Element]!
     
-    var separatorColor: UIColor? {
+    public var separatorColor: UIColor? {
         didSet {
             itemMap.values.forEach{ $0.separatorColor = separatorColor}
         }
     }
     
-    var separatorLeading: CGFloat? {
+    public var separatorLeading: CGFloat? {
         didSet {
             itemMap.values.forEach{$0.separatorLeading = separatorLeading}
         }
     }
     
-    var isToplineShow: Bool? {
+    public var isToplineShow: Bool? {
         didSet {
             itemMap.values.forEach{$0.isToplineShow = isToplineShow}
         }
@@ -54,12 +54,12 @@ public class FlashForm<Element>: UIControl  {
     }
     
     // Setter
-    subscript(key: String) -> FlashFormItem? {
+    subscript(keys: [String]) -> FlashFormItem? {
         get {
-            return itemMap[key]
+            return itemMap[keys]
         }
         set {
-            itemMap[key] = newValue
+            itemMap[keys] = newValue
         }
     }
     
@@ -104,7 +104,7 @@ public class FlashForm<Element>: UIControl  {
 
 public extension FlashForm where Element == FlashFormItem {
     
-    var rowHeight: CGFloat {
+    public var rowHeight: CGFloat {
         get {
             return _rowHeight
         }
@@ -124,7 +124,7 @@ public extension FlashForm where Element == FlashFormItem {
     
     func createContent() {
         content.forEach{
-            itemMap[$0.key] = $0
+            itemMap[$0.keys] = $0
             $0.translatesAutoresizingMaskIntoConstraints = false
             contentView.addSubview($0)
         }
@@ -176,11 +176,23 @@ public extension FlashForm where Element == FlashFormItem {
         }
         return dic
     }
+    
+    public func setValue(_ dic: [String: FlashFormValue]) {
+        itemMap.forEach { (keys, item) in
+            var values: [String: FlashFormValue] = [:]
+            keys.forEach({ key in
+                if let value = dic[key] {
+                    values.updateValue(value, forKey: key)
+                }
+            })
+            item.setValue(with: values)
+        }
+    }
 }
 
 public extension FlashForm where Element == FlashFormItemGroup {
     
-    var rowHeight: CGFloat {
+    public var rowHeight: CGFloat {
         get {
             return _rowHeight
         }
@@ -190,7 +202,7 @@ public extension FlashForm where Element == FlashFormItemGroup {
         }
     }
     
-    var headerHeight: CGFloat {
+    public var headerHeight: CGFloat {
         get {
             return _headerHeight
         }
@@ -199,8 +211,6 @@ public extension FlashForm where Element == FlashFormItemGroup {
             layoutContents()
         }
     }
-    
-    
     
     public convenience init(content: [FlashFormItemGroup], frame: CGRect = .zero) {
         self.init(frame: frame)
@@ -213,7 +223,7 @@ public extension FlashForm where Element == FlashFormItemGroup {
     func createContent() {
         content.forEach{
             $0.items.forEach{
-                itemMap[$0.key] = $0
+                itemMap[$0.keys] = $0
                 $0.translatesAutoresizingMaskIntoConstraints = false
                 contentView.addSubview($0)
             }
@@ -309,5 +319,17 @@ public extension FlashForm where Element == FlashFormItemGroup {
         var dic: [String: FlashFormValue] = [:]
         try content.forEach{ try $0.dic().forEach{dic.updateValue($1, forKey: $0) }}
         return dic
+    }
+    
+    public func setValue(_ dic: [String: FlashFormValue]) {
+        itemMap.forEach { (keys, item) in
+            var values: [String: FlashFormValue] = [:]
+            keys.forEach({ key in
+                if let value = dic[key] {
+                    values.updateValue(value, forKey: key)
+                }
+            })
+            item.setValue(with: values)
+        }
     }
 }

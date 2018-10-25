@@ -13,7 +13,7 @@ public protocol FlashFormValue{}
 
 public protocol  FlashShadowProtocol {
     func getValue() throws -> [String: FlashFormValue]
-    func setValue(with value: FlashFormValue)
+    func setValue(with dic: [String: FlashFormValue])
 }
 
 open class FlashFormItem: UIControl, FlashShadowProtocol {
@@ -50,16 +50,23 @@ open class FlashFormItem: UIControl, FlashShadowProtocol {
         }
     }
     
+    public var keys: [String] = []
+    
     public var key: String!
     
     open var _value: FlashFormValue?
     //MARK: - Initializations
     
-    public convenience init(key: String = "") {
+    public convenience init(keys: [String]) {
         self.init(frame: .zero)
-        self.key = key
+        self.keys = keys
         backgroundColor = .white
         setupSubviews()
+    }
+    
+    public convenience init(key: String) {
+        self.init(keys: [key])
+        self.key = key
     }
     
     public override init(frame: CGRect) {
@@ -102,7 +109,7 @@ open class FlashFormItem: UIControl, FlashShadowProtocol {
         return topline
     }
     
-    open func setValue(with value: FlashFormValue) {
+    open func setValue(with dic: [String: FlashFormValue]) {
         
     }
     

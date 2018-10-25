@@ -25,10 +25,6 @@ open class FlashFormTextItem: FlashFormItem {
         }
     }
     
-    open override func setValue(with value: FlashFormValue) {
-        contentLabel.text = value as? String
-    }
-    
     public convenience init(key: String, title: String?, content: String) {
         self.init(key: key)
         self.title = title

@@ -10,18 +10,16 @@ import Foundation
 
 open class FlashFormItemGroup {
     
-    var headerView: UIView?
-    var footerView: UIView?
+    public var headerView: UIView?
+    public var footerView: UIView?
     
-    var titleLabel: UILabel?
+    public var titleLabel: UILabel?
     
-    var footerLabel: UILabel?
+    public var footerLabel: UILabel?
     
     var items: [FlashFormItem]!
     
     public var headerHeight: CGFloat?
-    
-    public var key: String?
     
     public var title: String? {
         didSet {
@@ -104,7 +102,7 @@ open class FlashFormItemGroup {
 extension FlashFormItemGroup: Hashable {
     
     public var hashValue: Int {
-        return "\(key ?? "") \(items.hashValue)".hashValue
+        return items.map {$0.keys.joined(separator: ".")}.joined(separator: "-").hashValue
     }
     
     public static func == (lhs: FlashFormItemGroup, rhs: FlashFormItemGroup) -> Bool {
