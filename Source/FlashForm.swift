@@ -20,6 +20,8 @@ public class FlashForm<Element>: UIControl  {
     
     fileprivate var _rowHeight: CGFloat = 44
     fileprivate var _headerHeight: CGFloat = 15
+    fileprivate var _isToplineShow: Bool = true
+    fileprivate var _separatorLeading: CGFloat = 10
     
     // Values
     fileprivate var itemMap: [[String]: FlashFormItem] = [:]
@@ -28,18 +30,6 @@ public class FlashForm<Element>: UIControl  {
     public var separatorColor: UIColor? {
         didSet {
             itemMap.values.forEach{ $0.separatorColor = separatorColor}
-        }
-    }
-    
-    public var separatorLeading: CGFloat? {
-        didSet {
-            itemMap.values.forEach{$0.separatorLeading = separatorLeading}
-        }
-    }
-    
-    public var isToplineShow: Bool? {
-        didSet {
-            itemMap.values.forEach{$0.isToplineShow = isToplineShow}
         }
     }
     
@@ -104,12 +94,33 @@ public class FlashForm<Element>: UIControl  {
 
 public extension FlashForm where Element == FlashFormItem {
     
+    public var isToplineShow: Bool {
+        get {
+            return _isToplineShow
+        }
+        set {
+            _isToplineShow = newValue
+            layoutContents()
+        }
+    }
+    
     public var rowHeight: CGFloat {
         get {
             return _rowHeight
         }
         set {
             _rowHeight = newValue
+            layoutContents()
+        }
+    }
+    
+    public var separatorLeading: CGFloat {
+        get {
+            return _separatorLeading
+        }
+        set {
+            _separatorLeading = newValue
+            itemMap.values.forEach{$0.separatorLeading = newValue}
             layoutContents()
         }
     }
@@ -142,7 +153,7 @@ public extension FlashForm where Element == FlashFormItem {
                     item.topAnchor.constraint(equalTo: temp!.bottomAnchor)
                     ])
             } else {
-                item.isToplineShow = true
+                item.isToplineShow = self._isToplineShow
                 NSLayoutConstraint.activate([
                     item.topAnchor.constraint(equalTo: contentView.topAnchor)
                     ])
@@ -192,12 +203,33 @@ public extension FlashForm where Element == FlashFormItem {
 
 public extension FlashForm where Element == FlashFormItemGroup {
     
+    public var isToplineShow: Bool {
+        get {
+            return _isToplineShow
+        }
+        set {
+            _isToplineShow = newValue
+            layoutContents()
+        }
+    }
+    
     public var rowHeight: CGFloat {
         get {
             return _rowHeight
         }
         set {
             _rowHeight = newValue
+            layoutContents()
+        }
+    }
+    
+    public var separatorLeading: CGFloat {
+        get {
+            return _separatorLeading
+        }
+        set {
+            _separatorLeading = newValue
+            itemMap.values.forEach{$0.separatorLeading = newValue}
             layoutContents()
         }
     }
@@ -252,7 +284,7 @@ public extension FlashForm where Element == FlashFormItemGroup {
                         item.topAnchor.constraint(equalTo: temp!.bottomAnchor)
                         ])
                 } else {
-                    item.isToplineShow = true
+                    item.isToplineShow = _isToplineShow
                     if let header = group.headerView {
                         contentView.addSubview(header)
                         NSLayoutConstraint.activate([

@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum FlashFormError : Error {
+public enum FlashFormError : Error {
     case isNil(String)
     case checkFailed(String)
 }

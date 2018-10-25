@@ -10,12 +10,12 @@ import Foundation
 
 open class FlashFormItemGroup {
     
-    public var headerView: UIView?
-    public var footerView: UIView?
+    public internal(set) var headerView: UIView?
+    public internal(set) var footerView: UIView?
     
-    public var titleLabel: UILabel?
+    public internal(set) var titleLabel: UILabel?
     
-    public var footerLabel: UILabel?
+    public internal(set) var footerLabel: UILabel?
     
     var items: [FlashFormItem]!
     
@@ -45,8 +45,10 @@ open class FlashFormItemGroup {
         }
     }
     
-    public init(_ items:[FlashFormItem], _ key: String? = nil) {
+    public init(_ items:[FlashFormItem], _ headerView: UIView? = nil, _ footerView: UIView? = nil) {
         self.items = items
+        self.headerView = headerView
+        self.footerView = footerView
     }
     
     public func dic() throws -> [String: FlashFormValue] {
@@ -102,7 +104,7 @@ open class FlashFormItemGroup {
 extension FlashFormItemGroup: Hashable {
     
     public var hashValue: Int {
-        return items.map {$0.keys.joined(separator: ".")}.joined(separator: "-").hashValue
+        return items.map {"\($0.hashValue)"}.joined(separator: "-").hashValue
     }
     
     public static func == (lhs: FlashFormItemGroup, rhs: FlashFormItemGroup) -> Bool {
