@@ -23,10 +23,10 @@ public class FlashForm<Element>: UIControl  {
     
     // Values
     fileprivate var itemMap: [Set<String>: FlashFormItem] = [:]
-    var separatorMap: [Set<String>: UIView] = [:]
+    var separatorMap: [Int: UIView] = [:]
     var content: [Element]!
     
-    var separatorColor: UIColor? {
+    public var separatorColor: UIColor? {
         didSet {
             separatorMap.values.forEach{$0.backgroundColor = separatorColor}
         }
@@ -72,7 +72,7 @@ public class FlashForm<Element>: UIControl  {
         scrollView.addSubview(contentView)
         
         let defaultHeightConstraint = contentView.heightAnchor.constraint(equalTo: heightAnchor)
-        defaultHeightConstraint.priority = .defaultLow
+        defaultHeightConstraint.priority = .init(100)
         
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: topAnchor),
@@ -128,9 +128,16 @@ public extension FlashForm where Element == FlashFormItem {
             $0.translatesAutoresizingMaskIntoConstraints = false
             contentView.addSubview($0)
             let separator = UIView()
-            separatorMap[$0.keys] = separator
+            separator.translatesAutoresizingMaskIntoConstraints = false
             separator.backgroundColor = .lightGray
+            separatorMap[$0.hashValue] = separator
             $0.addSubview(separator)
+            NSLayoutConstraint.activate([
+                separator.leftAnchor.constraint(equalTo: $0.leftAnchor),
+                separator.rightAnchor.constraint(equalTo: $0.rightAnchor),
+                separator.bottomAnchor.constraint(equalTo: $0.bottomAnchor),
+                separator.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale)
+                ])
         }
         layoutContents()
     }
@@ -139,14 +146,6 @@ public extension FlashForm where Element == FlashFormItem {
         NSLayoutConstraint.deactivate(contentView.constraints)
         var temp: UIView?
         content.forEach { (item) in
-            
-            let separator = separatorMap[item.keys]!
-            NSLayoutConstraint.activate([
-                separator.leftAnchor.constraint(equalTo: item.leftAnchor),
-                separator.rightAnchor.constraint(equalTo: item.rightAnchor),
-                separator.bottomAnchor.constraint(equalTo: item.bottomAnchor),
-                separator.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale)
-                ])
             
             if item != content.first {
                 NSLayoutConstraint.activate([
@@ -238,8 +237,14 @@ public extension FlashForm where Element == FlashFormItemGroup {
                 let separator = UIView()
                 separator.translatesAutoresizingMaskIntoConstraints = false
                 separator.backgroundColor = .lightGray
-                separatorMap[$0.keys] = separator
+                separatorMap[$0.hashValue] = separator
                 $0.addSubview(separator)
+                NSLayoutConstraint.activate([
+                    separator.leftAnchor.constraint(equalTo: $0.leftAnchor),
+                    separator.rightAnchor.constraint(equalTo: $0.rightAnchor),
+                    separator.bottomAnchor.constraint(equalTo: $0.bottomAnchor),
+                    separator.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale)
+                    ])
             }
         }
         layoutContents()
@@ -250,15 +255,8 @@ public extension FlashForm where Element == FlashFormItemGroup {
         var temp: UIView?
         content.forEach{ group in
             group.items.forEach{ item in
-                
-                let separator = separatorMap[item.keys]!
-                NSLayoutConstraint.activate([
-                    separator.leftAnchor.constraint(equalTo: item.leftAnchor),
-                    separator.rightAnchor.constraint(equalTo: item.rightAnchor),
-                    separator.bottomAnchor.constraint(equalTo: item.bottomAnchor),
-                    separator.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale)
-                    ])
-                
+
+                // 通用约束，左右及高度
                 let heightConstraint = item.heightAnchor.constraint(equalToConstant: _rowHeight)
                 heightConstraint.priority = .defaultLow
                 
@@ -268,17 +266,20 @@ public extension FlashForm where Element == FlashFormItemGroup {
                     heightConstraint
                 ])
                 
-                if item != group.items.first {
-                    NSLayoutConstraint.activate([
-                        item.topAnchor.constraint(equalTo: temp!.bottomAnchor)
-                        ])
-                } else {
+                
+                // 分组第一个元素约束
+                if item == group.items.first {
+                    // 有 header
                     if let header = group.headerView {
+                        
+                        // 对 header 进行约束
                         contentView.addSubview(header)
                         NSLayoutConstraint.activate([
                             header.leftAnchor.constraint(equalTo: contentView.leftAnchor),
                             header.rightAnchor.constraint(equalTo: contentView.rightAnchor)
-                        ])
+                            ])
+                        
+                        // 判断是否为第一组
                         if group != content.first {
                             NSLayoutConstraint.activate([
                                 header.topAnchor.constraint(equalTo: temp!.bottomAnchor),
@@ -301,6 +302,11 @@ public extension FlashForm where Element == FlashFormItemGroup {
                                 ])
                         }
                     }
+                    
+                } else {
+                    NSLayoutConstraint.activate([
+                        item.topAnchor.constraint(equalTo: temp!.bottomAnchor)
+                        ])
                 }
                 
                 if item == group.items.last {
