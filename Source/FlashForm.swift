@@ -18,18 +18,17 @@ public class FlashForm<Element>: UIControl  {
     fileprivate var scrollView: UIScrollView!
     var contentView: UIView!
     
-    fileprivate var _rowHeight: CGFloat = 44
-    fileprivate var _headerHeight: CGFloat = 15
-    fileprivate var _isToplineShow: Bool = true
-    fileprivate var _separatorLeading: CGFloat = 10
+    public var _rowHeight: CGFloat = 44
+    public var _headerHeight: CGFloat = 20
     
     // Values
-    fileprivate var itemMap: [[String]: FlashFormItem] = [:]
+    fileprivate var itemMap: [Set<String>: FlashFormItem] = [:]
+    var separatorMap: [Set<String>: UIView] = [:]
     var content: [Element]!
     
-    public var separatorColor: UIColor? {
+    var separatorColor: UIColor? {
         didSet {
-            itemMap.values.forEach{ $0.separatorColor = separatorColor}
+            separatorMap.values.forEach{$0.backgroundColor = separatorColor}
         }
     }
     
@@ -44,7 +43,7 @@ public class FlashForm<Element>: UIControl  {
     }
     
     // Setter
-    subscript(keys: [String]) -> FlashFormItem? {
+    subscript(keys: Set<String>) -> FlashFormItem? {
         get {
             return itemMap[keys]
         }
@@ -90,16 +89,17 @@ public class FlashForm<Element>: UIControl  {
             defaultHeightConstraint
             ])
     }
+    
 }
 
 public extension FlashForm where Element == FlashFormItem {
     
-    public var isToplineShow: Bool {
+    public var headerHeight: CGFloat {
         get {
-            return _isToplineShow
+            return _headerHeight
         }
         set {
-            _isToplineShow = newValue
+            _headerHeight = newValue
             layoutContents()
         }
     }
@@ -110,17 +110,6 @@ public extension FlashForm where Element == FlashFormItem {
         }
         set {
             _rowHeight = newValue
-            layoutContents()
-        }
-    }
-    
-    public var separatorLeading: CGFloat {
-        get {
-            return _separatorLeading
-        }
-        set {
-            _separatorLeading = newValue
-            itemMap.values.forEach{$0.separatorLeading = newValue}
             layoutContents()
         }
     }
@@ -138,6 +127,10 @@ public extension FlashForm where Element == FlashFormItem {
             itemMap[$0.keys] = $0
             $0.translatesAutoresizingMaskIntoConstraints = false
             contentView.addSubview($0)
+            let separator = UIView()
+            separatorMap[$0.keys] = separator
+            separator.backgroundColor = .lightGray
+            $0.addSubview(separator)
         }
         layoutContents()
     }
@@ -147,20 +140,25 @@ public extension FlashForm where Element == FlashFormItem {
         var temp: UIView?
         content.forEach { (item) in
             
+            let separator = separatorMap[item.keys]!
+            NSLayoutConstraint.activate([
+                separator.leftAnchor.constraint(equalTo: item.leftAnchor),
+                separator.rightAnchor.constraint(equalTo: item.rightAnchor),
+                separator.bottomAnchor.constraint(equalTo: item.bottomAnchor),
+                separator.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale)
+                ])
+            
             if item != content.first {
-                item.isToplineShow = false
                 NSLayoutConstraint.activate([
                     item.topAnchor.constraint(equalTo: temp!.bottomAnchor)
                     ])
             } else {
-                item.isToplineShow = self._isToplineShow
                 NSLayoutConstraint.activate([
                     item.topAnchor.constraint(equalTo: contentView.topAnchor)
                     ])
             }
             
             if item == content.last {
-                item.separatorLeading = 0
                 NSLayoutConstraint.activate([
                     item.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
                     ])
@@ -183,7 +181,7 @@ public extension FlashForm where Element == FlashFormItem {
         var dic: [String: FlashFormValue] = [:]
         
         try itemMap.values.forEach { (item) in
-            try item.getValue().forEach{dic.updateValue($1, forKey: $0)}
+            try item.itemValue().forEach{dic.updateValue($1, forKey: $0)}
         }
         return dic
     }
@@ -203,33 +201,12 @@ public extension FlashForm where Element == FlashFormItem {
 
 public extension FlashForm where Element == FlashFormItemGroup {
     
-    public var isToplineShow: Bool {
-        get {
-            return _isToplineShow
-        }
-        set {
-            _isToplineShow = newValue
-            layoutContents()
-        }
-    }
-    
     public var rowHeight: CGFloat {
         get {
             return _rowHeight
         }
         set {
             _rowHeight = newValue
-            layoutContents()
-        }
-    }
-    
-    public var separatorLeading: CGFloat {
-        get {
-            return _separatorLeading
-        }
-        set {
-            _separatorLeading = newValue
-            itemMap.values.forEach{$0.separatorLeading = newValue}
             layoutContents()
         }
     }
@@ -258,6 +235,11 @@ public extension FlashForm where Element == FlashFormItemGroup {
                 itemMap[$0.keys] = $0
                 $0.translatesAutoresizingMaskIntoConstraints = false
                 contentView.addSubview($0)
+                let separator = UIView()
+                separator.translatesAutoresizingMaskIntoConstraints = false
+                separator.backgroundColor = .lightGray
+                separatorMap[$0.keys] = separator
+                $0.addSubview(separator)
             }
         }
         layoutContents()
@@ -269,6 +251,14 @@ public extension FlashForm where Element == FlashFormItemGroup {
         content.forEach{ group in
             group.items.forEach{ item in
                 
+                let separator = separatorMap[item.keys]!
+                NSLayoutConstraint.activate([
+                    separator.leftAnchor.constraint(equalTo: item.leftAnchor),
+                    separator.rightAnchor.constraint(equalTo: item.rightAnchor),
+                    separator.bottomAnchor.constraint(equalTo: item.bottomAnchor),
+                    separator.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale)
+                    ])
+                
                 let heightConstraint = item.heightAnchor.constraint(equalToConstant: _rowHeight)
                 heightConstraint.priority = .defaultLow
                 
@@ -279,12 +269,10 @@ public extension FlashForm where Element == FlashFormItemGroup {
                 ])
                 
                 if item != group.items.first {
-                    item.isToplineShow = false
                     NSLayoutConstraint.activate([
                         item.topAnchor.constraint(equalTo: temp!.bottomAnchor)
                         ])
                 } else {
-                    item.isToplineShow = _isToplineShow
                     if let header = group.headerView {
                         contentView.addSubview(header)
                         NSLayoutConstraint.activate([
@@ -316,8 +304,6 @@ public extension FlashForm where Element == FlashFormItemGroup {
                 }
                 
                 if item == group.items.last {
-                    item.separatorLeading = 0
-                    
                     if let footer = group.footerView {
                         contentView.addSubview(footer)
                         NSLayoutConstraint.activate([

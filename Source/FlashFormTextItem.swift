@@ -16,20 +16,29 @@ open class FlashFormTextItem: FlashFormItem {
         }
     }
     
-    var titleLabel: UILabel!
-    var contentLabel: UITextField!
-    
-    var value: String? {
+    var content: String? {
         didSet {
-            _value = value
+            contentLabel.text = content
         }
     }
     
+    var titleLabel: UILabel!
+    var contentLabel: UITextField!
+    
     public convenience init(key: String, title: String?, content: String) {
-        self.init(key: key)
+        self.init(keys: [key])
         self.title = title
-        self.value = content
+        self.content = content
         configSubviews()
+        
+        self.setValue = { item, dic in
+            let item = item as! FlashFormTextItem
+            item.content = dic[key] as? String
+        }
+        
+        self.getValue = { item, dic in
+            return [key: content]
+        }
     }
     
     func configSubviews()  {
@@ -39,7 +48,7 @@ open class FlashFormTextItem: FlashFormItem {
         addSubview(titleLabel)
         
         contentLabel = UITextField()
-        contentLabel?.text = value
+        contentLabel?.text = content
         contentLabel?.translatesAutoresizingMaskIntoConstraints = false
         addSubview(contentLabel)
         
@@ -53,6 +62,7 @@ open class FlashFormTextItem: FlashFormItem {
             contentLabel.widthAnchor.constraint(lessThanOrEqualTo: widthAnchor, multiplier: 0.7)
         ])
     }
+    
 }
 
 extension String: FlashFormValue {}

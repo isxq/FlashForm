@@ -54,7 +54,7 @@ open class FlashFormItemGroup {
     public func dic() throws -> [String: FlashFormValue] {
         var dic: [String: FlashFormValue] = [:]
         try items.forEach { (item) in
-            try item.getValue().forEach{dic.updateValue($1, forKey: $0)}
+            try item.itemValue().forEach{dic.updateValue($1, forKey: $0)}
         }
         return dic
     }

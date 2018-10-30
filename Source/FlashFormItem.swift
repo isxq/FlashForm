@@ -11,62 +11,25 @@ import Foundation
 
 public protocol FlashFormValue{}
 
-public protocol  FlashShadowProtocol {
-    func getValue() throws -> [String: FlashFormValue]
-    func setValue(with dic: [String: FlashFormValue])
-}
-
-open class FlashFormItem: UIControl, FlashShadowProtocol {
+open class FlashFormItem: UIControl {
     
-    private var separator: UIView!
+    static let removeKey: String = "$$FLASHFORMREMOVE##"
     
-    private var topline: UIView?
+    public var keys: Set<String>!
     
-    private var separatorConstraint: NSLayoutConstraint!
+    public var value: [String: FlashFormValue] = [:]
     
-    public var separatorLeading: CGFloat? {
-        didSet {
-            if let leading = separatorLeading {
-                separatorConstraint.constant = leading
-            }
-        }
-    }
+    open var getValue: ((FlashFormItem, [String: FlashFormValue]) throws -> [String: FlashFormValue])?
     
-    public var separatorColor: UIColor? {
-        didSet {
-            separator.backgroundColor = separatorColor
-        }
-    }
+    open var setValue: ((FlashFormItem, [String: FlashFormValue]) -> Void)?
     
-    public var isToplineShow: Bool? = false {
-        didSet {
-            if let isToplineShow = isToplineShow {
-                if let topLine = topline {
-                    topLine.isHidden = isToplineShow
-                } else if isToplineShow == true {
-                    topline = createTopLine()
-                }
-            }
-        }
-    }
-    
-    public var keys: [String] = []
-    
-    public var key: String!
-    
-    open var _value: FlashFormValue?
+    var transformedKeys: [String: String?]?
     //MARK: - Initializations
     
-    public convenience init(keys: [String]) {
+    public convenience init(keys: Set<String>) {
         self.init(frame: .zero)
         self.keys = keys
         backgroundColor = .white
-        setupSubviews()
-    }
-    
-    public convenience init(key: String) {
-        self.init(keys: [key])
-        self.key = key
     }
     
     public override init(frame: CGRect) {
@@ -78,47 +41,32 @@ open class FlashFormItem: UIControl, FlashShadowProtocol {
         fatalError("init(coder:) has not been implemented")
     }
     
-    //MARK: - SetupSubviews
-    
-    final func setupSubviews() {
-        separator = UIView()
-        separator.translatesAutoresizingMaskIntoConstraints = false
-        separator.backgroundColor = .lightGray
-        addSubview(separator)
-        separatorConstraint = separator.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10)
-        NSLayoutConstraint.activate([
-            separator.bottomAnchor.constraint(equalTo: bottomAnchor),
-            separator.trailingAnchor.constraint(equalTo: trailingAnchor),
-            separatorConstraint,
-            separator.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale)
-        ])
-        
-    }
-    
-    func createTopLine() -> UIView {
-        let topline = UIView()
-        topline.translatesAutoresizingMaskIntoConstraints = false
-        topline.backgroundColor = .gray
-        addSubview(topline)
-        NSLayoutConstraint.activate([
-            topline.topAnchor.constraint(equalTo: topAnchor),
-            topline.trailingAnchor.constraint(equalTo: trailingAnchor),
-            topline.leadingAnchor.constraint(equalTo: leadingAnchor),
-            topline.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale)
-        ])
-        return topline
+    public func transform(_ trans: [(String, String?)]){
+        if transformedKeys == nil {
+            transformedKeys = [:]
+        }
+        trans.forEach { transformedKeys!.updateValue($0.1, forKey: $0.0) }
     }
     
     open func setValue(with dic: [String: FlashFormValue]) {
-        
+        value = dic
+        setValue?(self, dic)
     }
     
-    open func getValue() throws -> [String : FlashFormValue] {
-        if let value = _value {
-            return [key: value]
-        } else {
-            return [:]
+    open func itemValue() throws -> [String: FlashFormValue] {
+        var dic = try getValue?(self, value) ?? [:]
+        transformedKeys?.forEach { (key, newKey) in
+            if let newKey = newKey, let value = dic[key] {
+                dic.updateValue(value, forKey: newKey)
+            }
+            dic.removeValue(forKey: key)
         }
+        return dic
     }
 }
 
+extension String {
+    public static func >> (lhs: String, rhs: String?) -> (String, String?) {
+        return (lhs, rhs)
+    }
+}
