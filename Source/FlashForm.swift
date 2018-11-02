@@ -193,7 +193,9 @@ public extension FlashForm where Element == FlashFormItem {
                     values.updateValue(value, forKey: key)
                 }
             })
-            item.setValue(with: values)
+            if values.count > 0 {
+                item.setValue(with: values)
+            }
         }
     }
 }
@@ -353,7 +355,9 @@ public extension FlashForm where Element == FlashFormItemGroup {
                     values.updateValue(value, forKey: key)
                 }
             })
-            item.setValue(with: values)
+            if values.count > 0 {            
+                item.setValue(with: values)
+            }
         }
     }
 }
