@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "FlashForm"
-  s.version      = "0.2.0"
+  s.version      = "0.2.1"
   s.license      = { :type => "MIT", :file => "LICENSE" }
   s.summary      = "Create a form in swift in a flash"
   s.homepage     = "https://github.com/isxq/FlashForm"

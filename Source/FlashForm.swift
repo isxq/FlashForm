@@ -24,7 +24,7 @@ public class FlashForm<Element>: UIControl  {
     // Values
     fileprivate var itemMap: [Set<String>: FlashFormItem] = [:]
     var separatorMap: [Int: UIView] = [:]
-    var content: [Element]!
+    var _content: [Element]!
     
     public var separatorColor: UIColor? {
         didSet {
@@ -114,15 +114,26 @@ public extension FlashForm where Element == FlashFormItem {
         }
     }
     
+    public var content: [FlashFormItem] {
+        get {
+            return _content
+        }
+        set {
+            _content = newValue
+            createContent()
+        }
+    }
+    
     public convenience init(content: [Element], frame: CGRect = .zero) {
         self.init(frame: frame)
         translatesAutoresizingMaskIntoConstraints = false
-        self.content = content
         setupSubviews()
-        createContent()
+        self.content = content
     }
     
     func createContent() {
+        contentView.subviews.forEach{$0.removeFromSuperview()}
+        itemMap.removeAll()
         content.forEach{
             itemMap[$0.keys] = $0
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -222,15 +233,26 @@ public extension FlashForm where Element == FlashFormItemGroup {
         }
     }
     
+    public var content: [FlashFormItemGroup] {
+        get {
+            return _content
+        }
+        set {
+            _content = newValue
+            createContent()
+        }
+    }
+    
     public convenience init(content: [FlashFormItemGroup], frame: CGRect = .zero) {
         self.init(frame: frame)
         translatesAutoresizingMaskIntoConstraints = false
-        self.content = content
         setupSubviews()
-        createContent()
+        self.content = content
     }
     
     func createContent() {
+        contentView.subviews.forEach{$0.removeFromSuperview()}
+        itemMap.removeAll()
         content.forEach{
             $0.items.forEach{
                 itemMap[$0.keys] = $0
